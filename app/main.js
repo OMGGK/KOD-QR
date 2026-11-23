@@ -77,20 +77,22 @@ async function draw(){
   } catch(e){log('Błąd QR: '+e.message);}
   const rightX=pad+qrSize+Math.max(12,Math.round(w*.035));
   const rightW=Math.max(15,w-rightX-pad);
-  const labelFont=Math.max(10,Math.min(30,Math.round(h*.115)));
+  const snLabelFont=Math.max(14,Math.min(34,Math.round(h*.13)));
+  const snValueFont=Math.max(18,Math.min(42,Math.round(h*.155)));
   ctx.textAlign='left';ctx.textBaseline='top';ctx.fillStyle='#000';
-  fitText(ctx,'SN:',rightX,pad,rightW,labelFont,10);
-  fitText(ctx,sn||'—',rightX,pad+labelFont+6,rightW,Math.min(34,labelFont+3),10);
+  fitText(ctx,'SN:',rightX,pad,rightW,snLabelFont,12);
+  fitText(ctx,sn||'—',rightX,pad+snLabelFont+6,rightW,snValueFont,12);
   // Wysokie czarne logo w prawym dolnym rogu; żadna ikona nie nakłada się na QR.
-  const logoW=Math.min(rightW*.36,w*.185);
-  const logoH=Math.min(h*.65,logoW*1.7);
+  const logoW=Math.min(rightW*.34,w*.18);
+  const logoH=Math.min(h*.62,logoW*1.7);
   drawLogo(ctx,w-pad-logoW,h-pad-logoH,logoW,logoH);
-  const manufFont=Math.max(10,Math.min(19,Math.round(h*.075)));
-  const bottomY=h-pad-manufFont-3;
-  const manufW=Math.max(35,rightW-logoW-Math.max(6,w*.015));
-  ctx.font=`${manufFont}px Arial,sans-serif`;
-  ctx.fillText('Manufactured:',rightX,bottomY-manufFont-6,manufW);
-  fitText(ctx,$('manufactured').value||'—',rightX,bottomY,manufW,manufFont+1,9);
+  const manufLabelFont=Math.max(14,Math.min(24,Math.round(h*.095)));
+  const manufValueFont=Math.max(18,Math.min(30,Math.round(h*.12)));
+  const bottomY=h-pad-manufValueFont-2;
+  const manufW=Math.max(40,rightW-logoW-Math.max(10,w*.02));
+  ctx.font=`700 ${manufLabelFont}px Arial,sans-serif`;
+  ctx.fillText('Manufactured:',rightX,bottomY-manufLabelFont-10,manufW);
+  fitText(ctx,$('manufactured').value||'—',rightX,bottomY,manufW,manufValueFont,12);
   $('dimensions').textContent=`${w} × ${h} px`;
 }
 for(const k of ['sn','manufactured','width','height','copies','density']) $(k).addEventListener('input',()=>{persist();draw();});
