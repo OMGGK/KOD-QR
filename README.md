@@ -1,47 +1,21 @@
-# QR Label Studio – NIIMBOT B3S_P
+# QR Label Studio — NIIMBOT B3S_P
 
-Aplikacja WWW do ręcznego generowania etykiet, drukowania Bluetooth i pobierania PNG.
+GitHub Pages: `https://omggk.github.io/KOD-QR/`
 
-- QR koduje **dokładnie zawartość pola SN**, bez tekstu "SN:".
-- Po prawej: SN, Manufactured, własne logo.
-- Dane i logo są zapisywane tylko w przeglądarce (`localStorage`), nie w GitHubie.
-- Web Bluetooth wymaga Chrome/Edge i HTTPS, drukarka musi być w zasięgu Bluetooth urządzenia z otwartą stroną.
-- Fizyczny wydruk na B3S_P wymaga przetestowania na drukarce; sterownik/protokół może wymagać dostrojenia.
+Etykieta: duży, niezależny kod QR po lewej (koduje dokładnie SN), SN u góry po prawej, Manufactured u dołu po prawej, wydłużone czarne logo baterii w prawym dolnym rogu. Nie ma pomarańczowej ikony, napisu Li-PRO 95 ani ręcznego wgrywania logo.
 
-## GitHub Pages – konfiguracja
+## Aktualizacja
 
-1. Załóż na GitHubie **puste repozytorium**, np. `qr-label-studio`, najlepiej publiczne.
-2. Rozpakuj ZIP, a **zawartość katalogu `QR Studio-Label`** (wraz z ukrytym `.github`) dodaj do repo.
-3. W terminalu w tym katalogu wykonaj:
-
-   ```bash
-   git init
-   git add .
-   git commit -m "QR Label Studio"
-   git branch -M main
-   git remote add origin https://github.com/TWOJ-LOGIN/qr-label-studio.git
-   git push -u origin main
-   ```
-
-4. W GitHub wejdź w **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-5. W **Actions** sprawdź workflow `Publish QR Label Studio`.
-6. Link będzie w formacie `https://TWOJ-LOGIN.github.io/qr-label-studio/`.
-
-Po kolejnych `git push` strona przebuduje się automatycznie.
-
-## Uruchamianie lokalne (opcjonalne)
+Rozpakuj ZIP i skopiuj **zawartość** do katalogu repozytorium `KOD-QR`, nadpisując pliki. W Git Bash, w tym katalogu:
 
 ```bash
-npm install
-npm run dev
+git add -A
+git commit -m "Powiekszony uklad i czarne logo baterii"
+git push
 ```
 
-Otwórz adres podany przez Vite.
+W GitHub Actions sprawdź zielony status publikacji, a potem odśwież stronę `Ctrl+F5`.
 
-## Ważne
+## Technicznie
 
-Strona jest publiczna, jeśli repozytorium i witryna Pages są publiczne, ale **wpisywany SN, producent i logo pozostają w przeglądarce**, nie są zapisywane do repo. GitHub Pages nie zastępuje Bluetooth: komputer/telefon z otwartą witryną musi być w pobliżu drukarki.
-
-
-## Ikona baterii na kodzie QR
-Ikona znajduje się w `app/battery.svg` i jest nakładana automatycznie w centrum QR; korekcja błędów QR jest ustawiona na H. Drukarki termiczne są monochromatyczne, więc ikona na wydruku będzie czarno-biała/szara. Przetestuj skanowanie QR na rzeczywistych etykietach przed drukiem seryjnym.
+`npm install` i `npm run dev` uruchamiają stronę lokalnie, a `npm run build` ją buduje. Web Bluetooth wymaga Chrome / Edge, HTTPS i urządzenia z Bluetooth przy drukarce. Rzeczywisty wydruk na NIIMBOT B3S_P wymaga sprawdzenia na urządzeniu.

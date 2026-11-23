@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 220">
-  <path fill="#000" d="M100 4h60c5 0 8 4 8 9v22h35c24 0 39 15 39 39v91c0 24-15 39-39 39H57c-24 0-39-15-39-39V74c0-24 15-39 39-39h35V13c0-5 3-9 8-9z"/>
-  <path fill="#fff" d="M146 60 87 129h47l-21 59 64-91h-48z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 270">
+<!-- Tall battery mark, high-contrast black-and-white for thermal printing -->
+<path fill="#000" d="M64 4h42a8 8 0 0 1 8 8v27h21c17 0 30 13 30 30v163c0 19-14 33-33 33H38c-19 0-33-14-33-33V69c0-17 13-30 30-30h21V12a8 8 0 0 1 8-8Z"/>
+<path fill="#fff" d="M103 70 47 153h40l-17 66 58-93H88Z"/>
 </svg>
