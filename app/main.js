@@ -72,8 +72,10 @@ async function draw(){
 
   const snLabelFont=Math.max(22,Math.round(h*.12));
   const snValueFont=Math.max(30,Math.round(h*.145));
-  fitText(ctx,'SN:',rightX,Math.round(h*.09),rightW,snLabelFont,16);
-  fitText(ctx,sn||'—',rightX,Math.round(h*.21),rightW,snValueFont,16);
+  // Górna krawędź SN wyrównana do widocznego początku modułów QR (po jego marginesie).
+  const snTopY=qrY+Math.round(qrSize*.08);
+  fitText(ctx,'SN:',rightX,snTopY,rightW,snLabelFont,16);
+  fitText(ctx,sn||'—',rightX,snTopY+snLabelFont+5,rightW,snValueFont,16);
 
   const manufLabelFont=Math.max(22,Math.round(h*.10));
   const manufValueFont=Math.max(28,Math.round(h*.13));
