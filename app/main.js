@@ -2,12 +2,13 @@ import QRCode from 'qrcode';
 import {instantiateClient, ImageEncoder, PageColorType, printTaskNames} from '@mmote/niimbluelib';
 import './style.css';
 import batteryUrl from './battery.svg';
+import defaultLogoUrl from './logo-li-pro-95.svg';
 
 const $ = id => document.getElementById(id);
 const defaults = {sn: 'SN-000001', manufactured:'QR Studio', width:576, height:240, copies:1, density:3};
 const saved = (()=> { try {return JSON.parse(localStorage.getItem('qr-label-studio-config')||'{}')} catch {return {}}})();
 const data = {...defaults, ...saved};
-let logo = localStorage.getItem('qr-label-studio-logo') || '';
+let logo = localStorage.getItem('qr-label-studio-logo') || defaultLogoUrl;
 let logoImage = null;
 const batteryImage = new Image();
 batteryImage.src = batteryUrl;
@@ -24,7 +25,7 @@ $('app').innerHTML = `
       <label>Serial Number (SN)<input id="sn" type="text" maxlength="160" autocomplete="off" placeholder="Np. SN-000001"/></label>
       <p class="hint">QR powstaje z SN. Stała bateryjka jest obok kodu QR, nie na nim.</p>
       <label>Manufactured<input id="manufactured" type="text" maxlength="130" placeholder="Np. QR Studio" /></label>
-      <div class="upload"><label for="logo" class="uploadlabel">↥ Dodaj własne logo (PNG/JPG)</label><input id="logo" type="file" accept="image/png,image/jpeg,image/webp"/><button id="deleteLogo" class="subtle" type="button">Usuń logo</button></div>
+      <div class="upload"><label for="logo" class="uploadlabel">↥ Zmień logo (opcjonalnie, PNG/JPG)</label><input id="logo" type="file" accept="image/png,image/jpeg,image/webp"/><button id="deleteLogo" class="subtle" type="button">Przywróć domyślne logo</button></div>
       <div class="section-id second">02 / USTAWIENIA WYDRUKU</div>
       <div class="twocol"><label>Szerokość (px)<input id="width" type="number" min="192" max="576" step="8" /></label><label>Wysokość (px)<input id="height" type="number" min="96" max="1000" step="8" /></label></div>
       <p class="hint">Ustaw rozmiar zgodny z fizyczną rolką. B3S_P ma nominalnie 576 punktów szerokości.</p>
@@ -40,7 +41,7 @@ $('app').innerHTML = `
       <div class="preview-actions"><button class="secondary" id="download">↓ Pobierz PNG</button><span class="mini">QR = SN • Bateryjka obok QR</span></div>
       <div class="terminal-head"><span class="section-id">TERMINAL / LOG ZDARZEŃ</span><button id="clearlog" class="subtle">Wyczyść</button></div>
       <pre id="terminal">[START] Panel gotowy. Wpisz dane etykiety.\n</pre>
-      <div class="bottom">Dane przechowywane lokalnie w przeglądarce • Bez Google Sheets • Bez konta</div>
+      <div class="bottom">Stałe logo domyślnie na każdej etykiecie • Bez Google Sheets • Bez konta</div>
     </main></div>
   </div>`;
 
@@ -60,7 +61,7 @@ function loadLogo(dataUrl){if(!dataUrl){logoImage=null;draw();return;}const img=
 loadLogo(logo);
 for(const k of ['sn','manufactured','width','height','copies','density']) $(k).addEventListener('input',()=>{persist();draw();});
 $('logo').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2_000_000){alert('Logo maksymalnie 2 MB.');return;}const r=new FileReader();r.onload=()=>{logo=r.result;try{localStorage.setItem('qr-label-studio-logo',logo);}catch{log('Logo jest zbyt duże do zapamiętania, ale działa w tej sesji.');}loadLogo(logo);log('Logo załadowane.');};r.readAsDataURL(f);});
-$('deleteLogo').onclick=()=>{logo='';localStorage.removeItem('qr-label-studio-logo');$('logo').value='';loadLogo('');log('Logo usunięte.');};
+$('deleteLogo').onclick=()=>{logo=defaultLogoUrl;localStorage.removeItem('qr-label-studio-logo');$('logo').value='';loadLogo(defaultLogoUrl);log('Przywrócono stałe logo.');};
 $('download').onclick=async()=>{try{check();await draw();const a=document.createElement('a');a.href=$('label').toDataURL('image/png');a.download=`etykieta_${$('sn').value.trim().replace(/[^a-zA-Z0-9_-]/g,'_')}.png`;a.click();log('Zapisano obraz etykiety.');}catch(e){alert(e.message);}};
 $('clearlog').onclick=()=>{$('terminal').textContent='';};
 
