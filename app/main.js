@@ -4,7 +4,7 @@ import './style.css';
 import defaultLogoUrl from './logo-li-pro-95.svg';
 
 const $ = id => document.getElementById(id);
-const defaults = {sn: 'SN-000001', manufactured:'QR Studio', width:576, height:240, copies:1, density:3};
+const defaults = {sn: 'SN-000001', manufactured:'01 2027', width:560, height:320, copies:1, density:3};
 const saved = (()=> { try {return JSON.parse(localStorage.getItem('qr-label-studio-config')||'{}')} catch {return {}}})();
 const data = {...defaults, ...saved};
 const logoImage = new Image();
@@ -63,36 +63,37 @@ async function draw(){
   const canvas=$('label'),ctx=canvas.getContext('2d',{willReadFrequently:true});
   canvas.width=w; canvas.height=h;
   ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.fillStyle='#000';
-  const pad=Math.max(8,Math.round(Math.min(w,h)*.045));
-  const qrSize=Math.floor(Math.min(h-pad*2,w*.43));
-  const qrY=Math.round((h-qrSize)/2);
+  // Układ odwzorowany z wzoru Paint: QR po lewej, duże SN u góry,
+  // wysoka bateria po prawej i duże Manufactured + data na dole.
+  const pad=Math.max(7,Math.round(Math.min(w,h)*.035));
+  const qrSize=Math.floor(Math.min(h*.59,w*.35));
+  const qrX=Math.round(w*.06);
+  const qrY=Math.round(h*.21);
   const sn=$('sn').value.trim();
   try {
     const temp=document.createElement('canvas');
     await QRCode.toCanvas(temp,sn||' ',{errorCorrectionLevel:'M',margin:3,width:qrSize,color:{dark:'#000000',light:'#ffffff'}});
     if(tick!==painting)return;
     ctx.imageSmoothingEnabled=false;
-    ctx.drawImage(temp,pad,qrY,qrSize,qrSize);
+    ctx.drawImage(temp,qrX,qrY,qrSize,qrSize);
     ctx.imageSmoothingEnabled=true;
   } catch(e){log('Błąd QR: '+e.message);}
-  const rightX=pad+qrSize+Math.max(12,Math.round(w*.035));
-  const rightW=Math.max(15,w-rightX-pad);
-  const snLabelFont=Math.max(14,Math.min(34,Math.round(h*.13)));
-  const snValueFont=Math.max(18,Math.min(42,Math.round(h*.155)));
+  const rightX=Math.round(w*.485);
+  const rightW=Math.max(20,w-rightX-pad);
   ctx.textAlign='left';ctx.textBaseline='top';ctx.fillStyle='#000';
-  fitText(ctx,'SN:',rightX,pad,rightW,snLabelFont,12);
-  fitText(ctx,sn||'—',rightX,pad+snLabelFont+6,rightW,snValueFont,12);
-  // Wysokie czarne logo w prawym dolnym rogu; żadna ikona nie nakłada się na QR.
-  const logoW=Math.min(rightW*.34,w*.18);
-  const logoH=Math.min(h*.62,logoW*1.7);
-  drawLogo(ctx,w-pad-logoW,h-pad-logoH,logoW,logoH);
-  const manufLabelFont=Math.max(14,Math.min(24,Math.round(h*.095)));
-  const manufValueFont=Math.max(18,Math.min(30,Math.round(h*.12)));
-  const bottomY=h-pad-manufValueFont-2;
-  const manufW=Math.max(40,rightW-logoW-Math.max(10,w*.02));
-  ctx.font=`700 ${manufLabelFont}px Arial,sans-serif`;
-  ctx.fillText('Manufactured:',rightX,bottomY-manufLabelFont-10,manufW);
-  fitText(ctx,$('manufactured').value||'—',rightX,bottomY,manufW,manufValueFont,12);
+  const snLabelFont=Math.round(h*.11);
+  const snValueFont=Math.round(h*.125);
+  fitText(ctx,'SN:',rightX,Math.round(h*.035),rightW,snLabelFont,14);
+  fitText(ctx,sn||'—',rightX,Math.round(h*.15),rightW,snValueFont,13);
+  // Stała długa czarna bateria — bez napisu, po prawej.
+  const logoW=Math.round(w*.175);
+  const logoH=Math.round(h*.49);
+  drawLogo(ctx,w-pad-logoW,Math.round(h*.30),logoW,logoH);
+  // Data nie jest ściśnięta w kolumnie obok logo: zajmuje cały dół.
+  const manufLabelFont=Math.round(h*.083);
+  const manufValueFont=Math.round(h*.10);
+  fitText(ctx,'Manufactured:',rightX,Math.round(h*.79),rightW,manufLabelFont,13);
+  fitText(ctx,$('manufactured').value||'—',rightX,Math.round(h*.885),rightW,manufValueFont,13);
   $('dimensions').textContent=`${w} × ${h} px`;
 }
 for(const k of ['sn','manufactured','width','height','copies','density']) $(k).addEventListener('input',()=>{persist();draw();});
