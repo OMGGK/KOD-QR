@@ -41,3 +41,7 @@ Otwórz adres podany przez Vite.
 ## Ważne
 
 Strona jest publiczna, jeśli repozytorium i witryna Pages są publiczne, ale **wpisywany SN, producent i logo pozostają w przeglądarce**, nie są zapisywane do repo. GitHub Pages nie zastępuje Bluetooth: komputer/telefon z otwartą witryną musi być w pobliżu drukarki.
+
+
+## Ikona baterii na kodzie QR
+Ikona znajduje się w `app/battery.svg` i jest nakładana automatycznie w centrum QR; korekcja błędów QR jest ustawiona na H. Drukarki termiczne są monochromatyczne, więc ikona na wydruku będzie czarno-biała/szara. Przetestuj skanowanie QR na rzeczywistych etykietach przed drukiem seryjnym.
